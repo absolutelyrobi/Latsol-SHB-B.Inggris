@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Olympiad Quiz — Grade X</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --surface3: #232840;
+    --gold: #e8c96a;
+    --gold2: #f5e199;
+    --teal: #3ecfb2;
+    --coral: #ff6b6b;
+    --purple: #a78bfa;
+    --blue: #60a5fa;
+    --text: #f0f4ff;
+    --text2: #9ba3c0;
+    --text3: #636b88;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --green: #4ade80;
+    --red: #f87171;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== BACKGROUND STARS ===== */
+  .stars-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .star {
+    position: absolute; background: white; border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite var(--delay);
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: var(--min-op); transform: scale(1); }
+    50% { opacity: var(--max-op); transform: scale(1.3); }
+  }
+  .nebula {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.06;
+    animation: nebula-drift 20s ease-in-out infinite alternate;
+  }
+  @keyframes nebula-drift { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(30px,20px) scale(1.05); } }
+
+  /* ===== HERO ===== */
+  #hero {
+    position: relative; z-index: 1;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 2rem;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(232,201,106,0.1); border: 1px solid rgba(232,201,106,0.3);
+    color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; padding: 6px 16px; border-radius: 100px;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.8s ease forwards;
+  }
+  .hero-badge::before { content: '★'; font-size: 10px; }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900; line-height: 1.1;
+    background: linear-gradient(135deg, var(--gold2) 0%, var(--gold) 40%, var(--teal) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 1rem;
+    animation: fadeDown 0.8s 0.15s ease both;
+  }
+  .hero-sub {
+    font-size: 1.1rem; color: var(--text2); max-width: 520px;
+    line-height: 1.7; margin-bottom: 2.5rem;
+    animation: fadeDown 0.8s 0.3s ease both;
+  }
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-bottom: 3rem;
+    animation: fadeDown 0.8s 0.45s ease both;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: var(--gold); display: block;
+  }
+  .hero-stat-label { font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+  .hero-divider { width: 1px; height: 40px; background: var(--border2); align-self: center; }
+  .start-btn {
+    background: linear-gradient(135deg, var(--gold), #c8960a);
+    color: #0d0f14; font-family: 'DM Sans', sans-serif; font-weight: 700;
+    font-size: 1rem; padding: 1rem 2.5rem; border: none; border-radius: 100px;
+    cursor: pointer; letter-spacing: 0.5px;
+    box-shadow: 0 8px 32px rgba(232,201,106,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeDown 0.8s 0.6s ease both;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(232,201,106,0.5); }
+  .start-btn:active { transform: translateY(0); }
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    color: var(--text3); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  /* ===== SECTION TABS ===== */
+  #quiz-app { position: relative; z-index: 1; }
+
+  .section-header {
+    text-align: center; padding: 5rem 2rem 3rem;
+  }
+  .section-tag {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 2px; color: var(--teal);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700;
+    color: var(--text); margin-bottom: 0.75rem;
+  }
+  .section-desc { color: var(--text2); font-size: 1rem; max-width: 500px; margin: 0 auto; }
+
+  /* ===== PROGRESS BAR ===== */
+  .quiz-progress-wrap {
+    max-width: 820px; margin: 0 auto; padding: 0 2rem 1.5rem;
+  }
+  .progress-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .progress-label { font-size: 13px; color: var(--text2); }
+  .progress-count { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--gold); }
+  .progress-track {
+    height: 6px; background: var(--surface2); border-radius: 100px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--gold), var(--teal));
+    transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  /* ===== QUESTION CARD ===== */
+  .quiz-container { max-width: 820px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+  .passage-card {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-left: 3px solid var(--gold); border-radius: 14px;
+    padding: 1.5rem 1.75rem; margin-bottom: 1.5rem;
+    position: relative; overflow: hidden;
+  }
+  .passage-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .passage-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--gold); margin-bottom: 0.75rem; display: block;
+  }
+  .passage-text { font-size: 14px; line-height: 1.8; color: var(--text2); }
+
+  .question-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2rem 2.25rem;
+    animation: cardIn 0.4s ease;
+  }
+  @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+  .q-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
+  .q-num {
+    width: 36px; height: 36px; border-radius: 10px; display: flex;
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(232,201,106,0.15), rgba(232,201,106,0.05));
+    border: 1px solid rgba(232,201,106,0.3);
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600; color: var(--gold);
+    flex-shrink: 0;
+  }
+  .q-section-tag {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
+    padding: 3px 10px; border-radius: 100px;
+  }
+  .tag-narrative { background: rgba(167,139,250,0.12); color: var(--purple); }
+  .tag-conditional { background: rgba(96,165,250,0.12); color: var(--blue); }
+  .tag-functional { background: rgba(62,207,178,0.12); color: var(--teal); }
+  .tag-grammar { background: rgba(255,107,107,0.12); color: var(--coral); }
+
+  .q-text {
+    font-size: 1rem; line-height: 1.75; color: var(--text); margin-bottom: 1.75rem; font-weight: 400;
+  }
+  .q-text em { font-style: italic; color: var(--gold); font-style: normal; background: rgba(232,201,106,0.1); padding: 1px 6px; border-radius: 4px; }
+
+  .options-list { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 0.9rem 1.25rem;
+    cursor: pointer; text-align: left; transition: all 0.18s ease;
+    width: 100%;
+  }
+  .option-btn:hover { border-color: var(--border2); background: var(--surface3); }
+  .option-letter {
+    width: 28px; height: 28px; border-radius: 8px; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+    background: var(--surface3); border: 1px solid var(--border2);
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600;
+    color: var(--text2); transition: all 0.18s;
+  }
+  .option-text { font-size: 14px; line-height: 1.6; color: var(--text2); padding-top: 4px; }
+
+  /* Selected */
+  .option-btn.selected { border-color: var(--gold); background: rgba(232,201,106,0.05); }
+  .option-btn.selected .option-letter { background: var(--gold); color: #0d0f14; border-color: var(--gold); }
+  .option-btn.selected .option-text { color: var(--text); }
+
+  /* Correct */
+  .option-btn.correct { border-color: var(--green) !important; background: rgba(74,222,128,0.06) !important; }
+  .option-btn.correct .option-letter { background: var(--green) !important; color: #0d0f14 !important; border-color: var(--green) !important; }
+  .option-btn.correct .option-text { color: var(--green) !important; }
+
+  /* Wrong */
+  .option-btn.wrong { border-color: var(--red) !important; background: rgba(248,113,113,0.06) !important; }
+  .option-btn.wrong .option-letter { background: var(--red) !important; color: white !important; border-color: var(--red) !important; }
+  .option-btn.wrong .option-text { color: var(--red) !important; }
+
+  .option-btn:disabled { cursor: default; pointer-events: none; }
+
+  /* ===== EXPLANATION ===== */
+  .explanation-box {
+    margin-top: 1.25rem; padding: 1rem 1.25rem;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-left: 3px solid var(--teal); border-radius: 10px;
+    display: none;
+  }
+  .explanation-box.visible { display: block; animation: fadeDown 0.3s ease; }
+  .explanation-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); margin-bottom: 6px; }
+  .explanation-text { font-size: 13px; line-height: 1.6; color: var(--text2); }
+
+  /* ===== NAV BUTTONS ===== */
+  .q-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 1.75rem; padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  .nav-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    color: var(--text2); padding: 0.65rem 1.25rem; border-radius: 10px;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border2); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+  .nav-btn.primary {
+    background: linear-gradient(135deg, var(--gold), #c8960a);
+    color: #0d0f14; border-color: transparent; font-weight: 600;
+  }
+  .nav-btn.primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(232,201,106,0.4); }
+
+  .q-counter { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text3); }
+
+  /* ===== SCORE SCREEN ===== */
+  #score-screen {
+    display: none; position: relative; z-index: 1;
+    min-height: 100vh; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; padding: 4rem 2rem;
+  }
+  #score-screen.active { display: flex; }
+  .score-circle-wrap { position: relative; margin-bottom: 2rem; }
+  .score-circle {
+    width: 180px; height: 180px; border-radius: 50%;
+    background: conic-gradient(var(--gold) var(--pct), var(--surface2) 0);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    animation: rotateIn 1.2s cubic-bezier(0.34,1.2,0.64,1) forwards;
+  }
+  @keyframes rotateIn { from{transform:rotate(-90deg) scale(0.8)} to{transform:rotate(0deg) scale(1)} }
+  .score-circle-inner {
+    width: 148px; height: 148px; border-radius: 50%;
+    background: var(--surface); display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .score-num {
+    font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900;
+    color: var(--gold); line-height: 1;
+  }
+  .score-denom { font-size: 13px; color: var(--text3); margin-top: 2px; }
+  .score-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;
+  }
+  .score-message { color: var(--text2); margin-bottom: 2rem; font-size: 1rem; max-width: 400px; }
+  .score-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    margin-bottom: 2.5rem; max-width: 600px; width: 100%;
+  }
+  .score-stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1rem; text-align: center;
+  }
+  .score-stat-val { font-size: 1.5rem; font-weight: 700; display: block; margin-bottom: 2px; }
+  .score-stat-key { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+  .retry-btn {
+    background: linear-gradient(135deg, var(--gold), #c8960a);
+    color: #0d0f14; font-weight: 700; font-size: 1rem;
+    padding: 0.9rem 2.5rem; border: none; border-radius: 100px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .retry-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,201,106,0.4); }
+
+  /* ===== SECTION SELECTOR ===== */
+  .section-selector {
+    max-width: 820px; margin: 0 auto 2.5rem; padding: 0 2rem;
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .sec-filter-btn {
+    padding: 6px 16px; border-radius: 100px;
+    border: 1px solid var(--border2); background: var(--surface);
+    color: var(--text2); font-size: 13px; cursor: pointer; transition: all 0.2s;
+  }
+  .sec-filter-btn:hover, .sec-filter-btn.active {
+    background: rgba(232,201,106,0.1); border-color: rgba(232,201,106,0.4); color: var(--gold);
+  }
+
+  /* ===== ANSWER TABLE ===== */
+  #answer-key { position: relative; z-index: 1; padding: 0 2rem 6rem; }
+  .answer-table-wrap { max-width: 820px; margin: 0 auto; overflow-x: auto; }
+  .answer-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .answer-table th {
+    background: var(--surface2); color: var(--text2); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; font-size: 11px;
+    padding: 12px 16px; border-bottom: 1px solid var(--border2);
+    text-align: left;
+  }
+  .answer-table td {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    color: var(--text2); vertical-align: top; line-height: 1.5;
+  }
+  .answer-table tr:hover td { background: var(--surface2); }
+  .key-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 7px;
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 700;
+    background: rgba(232,201,106,0.15); color: var(--gold);
+    border: 1px solid rgba(232,201,106,0.3);
+  }
+  .section-row { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    position: relative; z-index: 1; text-align: center;
+    padding: 2rem; color: var(--text3); font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== CONFETTI ===== */
+  .confetti-piece {
+    position: fixed; width: 8px; height: 8px; pointer-events: none;
+    animation: confetti-fall var(--dur) ease-in forwards;
+    border-radius: 2px; z-index: 9999;
+  }
+  @keyframes confetti-fall {
+    0% { transform: translateY(-20px) rotateZ(0); opacity: 1; }
+    100% { transform: translateY(110vh) rotateZ(var(--rot)); opacity: 0; }
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--surface); border: 1px solid var(--border2);
+    color: var(--text); padding: 12px 24px; border-radius: 100px;
+    font-size: 14px; z-index: 1000; transition: transform 0.3s ease;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .hero-stats { gap: 1.5rem; }
+    .score-grid { grid-template-columns: repeat(2, 1fr); }
+    .question-card { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars BG -->
+<div class="stars-bg" id="stars"></div>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-badge">English Olympiad Series</div>
+  <h1 class="hero-title">Grade X English<br>Quiz Challenge</h1>
+  <p class="hero-sub">Master Narrative Text, Conditional Sentences, Functional Texts & Grammar Skills through 40 HOTS-level questions.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="hero-stat-num">40</span><span class="hero-stat-label">Questions</span></div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat"><span class="hero-stat-num">4</span><span class="hero-stat-label">Sections</span></div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat"><span class="hero-stat-num">HOTS</span><span class="hero-stat-label">Level</span></div>
+  </div>
+  <button class="start-btn" onclick="startQuiz()">▶ Begin the Challenge</button>
+  <div class="scroll-hint">↓ scroll down</div>
+</section>
+
+<!-- ===== QUIZ APP ===== -->
+<section id="quiz-app" style="display:none;">
+  <div class="section-header reveal">
+    <span class="section-tag">Interactive Quiz</span>
+    <h2 class="section-title">Answer All 40 Questions</h2>
+    <p class="section-desc">Choose the best answer for each question. Review explanations after each answer.</p>
+  </div>
+
+  <div class="quiz-progress-wrap">
+    <div class="progress-meta">
+      <span class="progress-label">Progress</span>
+      <span class="progress-count" id="prog-count">0 / 40</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="section-selector" id="section-filter">
+    <button class="sec-filter-btn active" onclick="filterSection('all', this)">All (40)</button>
+    <button class="sec-filter-btn" onclick="filterSection('narrative', this)">📖 Narrative (1–10)</button>
+    <button class="sec-filter-btn" onclick="filterSection('conditional', this)">🔀 Conditional (11–20)</button>
+    <button class="sec-filter-btn" onclick="filterSection('functional', this)">📢 Functional (21–30)</button>
+    <button class="sec-filter-btn" onclick="filterSection('grammar', this)">✏️ Grammar (31–40)</button>
+  </div>
+
+  <div class="quiz-container" id="quiz-container"></div>
+</section>
+
+<!-- ===== SCORE SCREEN ===== -->
+<section id="score-screen">
+  <div class="score-circle-wrap">
+    <div class="score-circle" id="score-circle">
+      <div class="score-circle-inner">
+        <span class="score-num" id="score-num">0</span>
+        <span class="score-denom">out of 40</span>
+      </div>
+    </div>
+  </div>
+  <h2 class="score-title" id="score-title">—</h2>
+  <p class="score-message" id="score-msg">—</p>
+  <div class="score-grid" id="score-grid"></div>
+  <button class="retry-btn" onclick="resetQuiz()">↺ Retake Quiz</button>
+</section>
+
+<!-- ===== ANSWER KEY ===== -->
+<section id="answer-key" style="display:none;">
+  <div class="section-header reveal">
+    <span class="section-tag">Reference</span>
+    <h2 class="section-title">Answer Key & Explanations</h2>
+  </div>
+  <div class="answer-table-wrap">
+    <table class="answer-table" id="answer-table">
+      <thead><tr><th style="width:50px">No</th><th style="width:70px">Key</th><th>Explanation</th></tr></thead>
+      <tbody id="answer-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <p>English Olympiad Quiz — Grade X | Kurikulum Merdeka | SMA/SMK/MA</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const QUESTIONS = [
+  // ===== SECTION 1: NARRATIVE TEXT (1-10) =====
+  {
+    id:1, section:'narrative',
+    passage: `THE LEGEND OF MALIN KUNDANG\n\nLong ago in a small coastal village in West Sumatra, there lived a poor boy named Malin Kundang. His father had left the family when he was young, so his mother raised him alone with great difficulty. One day, Malin decided to seek his fortune by sailing to distant lands. His mother wept as she watched the boat disappear over the horizon.\nYears passed. Malin became a wealthy merchant and married a beautiful noblewoman. One day, his ship landed near his old village. His old, ragged mother ran to the shore, arms open wide. But Malin, ashamed of his humble past and afraid his wife would think less of him, denied her. "I do not know you," he said coldly. "You are not my mother."\nHis mother, heartbroken, raised her hands to the sky and cried: "If you are truly my son, may you be turned to stone!" A fierce storm suddenly brewed. Lightning struck Malin's ship. When the waves calmed, all that remained was a stone statue kneeling on the rocks — the petrified form of Malin Kundang.`,
+    q: `What is the MAIN CONFLICT in the legend of Malin Kundang?`,
+    type:'narrative',
+    opts:['A. Malin struggles against a powerful storm at sea.','B. Malin is too poor to afford a ship for his voyage.','C. Malin rejects his own mother out of pride and shame.','D. Malin\'s mother does not want him to leave the village.','E. Malin loses all his wealth to a rival merchant.'],
+    answer:'C',
+    explain:`The core conflict is Man vs. Self (and Man vs. Man): Malin chooses pride over love, denying his own mother. Options A and E describe events, not the central conflict. B and D are incorrect based on the text.`
+  },
+  {
+    id:2, section:'narrative',
+    passage:null,
+    q:`Based on the Malin Kundang passage, which structural part contains the sentence: "Long ago in a small coastal village in West Sumatra, there lived a poor boy named Malin Kundang"?`,
+    type:'narrative',
+    opts:['A. Resolution','B. Complication','C. Orientation','D. Coda','E. Rising Action'],
+    answer:'C',
+    explain:`Orientation introduces the characters, setting (West Sumatra coastal village), and time (Long ago). This is the opening structural element of a narrative text.`
+  },
+  {
+    id:3, section:'narrative',
+    passage:null,
+    q:`What is the MORAL LESSON of the Malin Kundang legend?`,
+    type:'narrative',
+    opts:['A. Wealth brings happiness and a better life.','B. Always be grateful and honour your parents, no matter how successful you become.','C. Sailing far from home is always dangerous.','D. Poor mothers should not expect their children to return.','E. Stone statues are common near Indonesian beaches.'],
+    answer:'B',
+    explain:`The legend explicitly teaches respect and gratitude toward parents. Malin\'s transformation into stone is divine punishment for his ingratitude and pride. Options A, C, D, E are distortions of the text\'s message.`
+  },
+  {
+    id:4, section:'narrative',
+    passage:null,
+    q:`In the sentence "His mother, heartbroken, raised her hands to the sky," which type of character is Malin Kundang's mother?`,
+    type:'narrative',
+    opts:['A. Antagonist','B. Flat character','C. Villain','D. Protagonist','E. Supporting character'],
+    answer:'D',
+    explain:`Malin\'s mother is the moral centre and hero of the story — she represents unconditional love and righteousness. While Malin is the main character, his mother functions as the true protagonist in terms of moral standing. Note: In some analyses she is the protagonist; Malin is the tragic anti-hero/antagonist.`
+  },
+  {
+    id:5, section:'narrative',
+    passage:null,
+    q:`"Malin's eyes were as cold as the deep ocean." What figurative device is used?`,
+    type:'narrative',
+    opts:['A. Personification','B. Hyperbole','C. Metaphor','D. Alliteration','E. Simile'],
+    answer:'E',
+    explain:`The word "as...as" signals a Simile — a comparison using "like" or "as." A Metaphor would say "Malin\'s eyes were the deep ocean" without "as." Personification gives human traits to non-humans; Hyperbole is extreme exaggeration.`
+  },
+  {
+    id:6, section:'narrative',
+    passage:`THE FOX AND THE GRAPES\n\nOne hot afternoon, a hungry fox spotted a cluster of ripe, purple grapes hanging high on a vine. He leaped and snapped, again and again, but could not reach them. Finally, exhausted, he turned away and muttered: "Those grapes are probably sour anyway. I didn't want them at all."`,
+    q:`This text is classified as a FABLE. What key feature identifies it as a fable?`,
+    type:'narrative',
+    opts:['A. It is set in ancient Greece with historical characters.','B. It is written using dialogue between two humans.','C. It features an animal character with human-like thoughts and speech that conveys a moral.','D. It uses supernatural events to explain the origin of grapes.','E. It is narrated in first person by the fox.'],
+    answer:'C',
+    explain:`Fables feature animals with human traits (thoughts, speech, emotions) and always convey a moral lesson. Here, the fox rationalises failure — a very human psychological behaviour.`
+  },
+  {
+    id:7, section:'narrative',
+    passage:null,
+    q:`In the Fox and the Grapes fable, what is the type of conflict?`,
+    type:'narrative',
+    opts:['A. Man vs. Man','B. Man vs. Nature','C. Man vs. Society','D. Man vs. Self','E. Man vs. Technology'],
+    answer:'D',
+    explain:`The fox\'s internal struggle — between desire and the inability to achieve it — and his final rationalisation ("sour grapes") represents Man vs. Self conflict: a psychological battle within the character.`
+  },
+  {
+    id:8, section:'narrative',
+    passage:null,
+    q:`Which temporal connective correctly begins the COMPLICATION of a narrative?`,
+    type:'narrative',
+    opts:['A. "Finally, the princess married the prince."','B. "Once upon a time, there was a brave knight."','C. "And so, peace was restored to the kingdom."','D. "Suddenly, a dark storm cloud appeared over the castle."','E. "Long ago, in a land far away..."'],
+    answer:'D',
+    explain:`"Suddenly" is a sequence/transition connective that signals a turning point — the beginning of conflict (Complication). Options A and C signal Resolution. Options B and E signal Orientation.`
+  },
+  {
+    id:9, section:'narrative',
+    passage:null,
+    q:`Read this excerpt: "The ancient tree groaned and whispered secrets to the wandering wind." Which figurative language is used?`,
+    type:'narrative',
+    opts:['A. Simile — using "like" to compare the tree to a person','B. Hyperbole — exaggerating the tree\'s age','C. Metaphor — the tree represents a wise elder directly','D. Personification — the tree is given human abilities (groaning, whispering)','E. Alliteration — repetition of "w" sounds in "wandering wind"'],
+    answer:'D',
+    explain:`While alliteration ("wandering wind") is present, the PRIMARY device is Personification — giving the tree human actions (groaning, whispering). Questions ask for the main device illustrated by the whole sentence.`
+  },
+  {
+    id:10, section:'narrative',
+    passage:null,
+    q:`In a narrative text, what is the PURPOSE of the CODA?`,
+    type:'narrative',
+    opts:['A. To introduce the main characters at the beginning of the story.','B. To present the central problem that needs to be solved.','C. To describe the setting of the story in detail.','D. To provide a final moral lesson or reflective comment after the resolution.','E. To explain the historical background of the legend.'],
+    answer:'D',
+    explain:`The Coda is the optional final section after the Resolution. It provides a moral, lesson, or reflection — like a takeaway message for the reader. It does not introduce characters (A), present conflict (B), describe setting (C), or give historical context (E).`
+  },
+
+  // ===== SECTION 2: CONDITIONAL (11-20) =====
+  {
+    id:11, section:'conditional',
+    passage:null,
+    q:`Which sentence is a correct example of a ZERO CONDITIONAL?`,
+    type:'conditional',
+    opts:['A. If she studies tonight, she will pass the exam.','B. If I were a bird, I would fly to Paris.','C. If you drop a ball, it falls to the ground.','D. If he had worked harder, he would have succeeded.','E. If it rains tomorrow, we will stay inside.'],
+    answer:'C',
+    explain:`Zero Conditional states a universal truth or scientific fact: If + Present Simple, Present Simple. Dropping a ball ALWAYS results in it falling. Options A and E = Type 1; B = Type 2; D = Type 3 (not in syllabus).`
+  },
+  {
+    id:12, section:'conditional',
+    passage:null,
+    q:`"If Rina ________ (not submit) her assignment on time, the teacher will deduct her marks." Which form correctly fills the blank for a Type 1 Conditional?`,
+    type:'conditional',
+    opts:['A. would not submit','B. had not submitted','C. does not submit','D. will not submit','E. did not submit'],
+    answer:'C',
+    explain:`Type 1 (First Conditional) uses Simple Present in the if-clause. "Does not submit" is the correct negative Present Simple form. "Will not submit" is a common error — never use "will" in the if-clause of Type 1.`
+  },
+  {
+    id:13, section:'conditional',
+    passage:null,
+    q:`Complete the sentence: "If I ________ the president of Indonesia, I ________ invest more in education." (Type 2)`,
+    type:'conditional',
+    opts:['A. am / will invest','B. was / will invest','C. were / would invest','D. am / would invest','E. were / will invest'],
+    answer:'C',
+    explain:`Type 2 Conditional (imaginary/unreal) requires: If + were (for ALL subjects with "to be") + would + V1. "Was" is grammatically incorrect in formal Type 2; "were" must be used. "Will" in the main clause is wrong — must be "would."`
+  },
+  {
+    id:14, section:'conditional',
+    passage:null,
+    q:`What type of conditional is: "If you freeze water, it turns to ice"?`,
+    type:'conditional',
+    opts:['A. First Conditional — a real future possibility','B. Second Conditional — an imaginary scenario','C. Zero Conditional — a scientific fact always true','D. Third Conditional — a past hypothetical','E. Mixed Conditional — combining past and present'],
+    answer:'C',
+    explain:`Freezing water ALWAYS turns it to ice — this is a scientific truth that never changes. Zero Conditional formula: If + V1 (present), V1 (present). Both clauses use Simple Present tense.`
+  },
+  {
+    id:15, section:'conditional',
+    passage:null,
+    q:`Identify the ERROR in this sentence: "If he will study more carefully, he will understand the lesson."`,
+    type:'conditional',
+    opts:['A. "he" should be "they"','B. "understand" should be "understood"','C. "will study" should be "studies" — no "will" in the if-clause','D. "more carefully" should be "most carefully"','E. "will understand" should be "would understand"'],
+    answer:'C',
+    explain:`In Type 1 Conditional, the if-clause must use Simple Present — NEVER "will." The correct form is "If he studies more carefully, he will understand." Using "will" in the if-clause is the most common learner error.`
+  },
+  {
+    id:16, section:'conditional',
+    passage:null,
+    q:`"If animals could speak, they ________ (tell) us so many things about nature." Which option correctly completes this Type 2 sentence?`,
+    type:'conditional',
+    opts:['A. will tell','B. told','C. tell','D. would tell','E. are telling'],
+    answer:'D',
+    explain:`Type 2 Conditional main clause: subject + WOULD + base verb (V1). "Animals could speak" establishes the imaginary/unreal condition. "Would tell" is the only grammatically correct option for the result clause.`
+  },
+  {
+    id:17, section:'conditional',
+    passage:null,
+    q:`Which sentence correctly uses the verb "to be" in a TYPE 2 CONDITIONAL for a THIRD PERSON SINGULAR subject?`,
+    type:'conditional',
+    opts:['A. If she was a doctor, she would help the poor.','B. If she is a doctor, she will help the poor.','C. If she were a doctor, she would help the poor.','D. If she be a doctor, she would help the poor.','E. If she was a doctor, she will help the poor.'],
+    answer:'C',
+    explain:`In Type 2 Conditional, "were" must be used for ALL subjects (I, he, she, it, they, we, you) — NOT "was," even for singular subjects. This is a formal grammar rule. "Were" signals the hypothetical/unreal mood.`
+  },
+  {
+    id:18, section:'conditional',
+    passage:null,
+    q:`Dani says: "I always feel sick ________ I eat too much junk food." Which conditional type and word best completes this?`,
+    type:'conditional',
+    opts:['A. if (Type 1) — real future warning','B. if (Type 0) — general truth about his body','C. if (Type 2) — imaginary scenario','D. unless (Type 1) — real future condition','E. when (Type 2) — unreal time clause'],
+    answer:'B',
+    explain:`"I always feel sick if I eat too much junk food" is Dani\'s personal general truth — it ALWAYS happens. This is Zero Conditional (Type 0): If + Present Simple, Present Simple. It\'s not a future prediction or imaginary scenario.`
+  },
+  {
+    id:19, section:'conditional',
+    passage:null,
+    q:`"________ she doesn't hurry, she will miss the school bus." Which word correctly fills the blank?`,
+    type:'conditional',
+    opts:['A. Unless','B. Although','C. Because','D. Since','E. If'],
+    answer:'E',
+    explain:`"If" introduces a real conditional: If she doesn\'t hurry → she will miss the bus (Type 1). "Unless" means "if...not" and would require "Unless she hurries, she will miss the bus" — grammatically it also works but the blank asks for the most direct completion. With the given text "doesn\'t hurry," "If" is the natural choice.`
+  },
+  {
+    id:20, section:'conditional',
+    passage:null,
+    q:`Which of the following sentences represents a FIRST CONDITIONAL used to express a WARNING?`,
+    type:'conditional',
+    opts:['A. If water freezes, it becomes solid.','B. If I were rich, I would donate to charity.','C. If you touch that wire, you will get an electric shock.','D. If she had studied, she would have passed.','E. If dogs could fly, the world would be chaotic.'],
+    answer:'C',
+    explain:`Type 1 (First Conditional) is used for real, possible futures — including warnings. "If you touch that wire, you WILL get shocked" is a real, dangerous possibility. It warns of a genuine consequence. Options A = Type 0; B, E = Type 2; D = Type 3.`
+  },
+
+  // ===== SECTION 3: FUNCTIONAL TEXTS (21-30) =====
+  {
+    id:21, section:'functional',
+    passage:`MOVIE POSTER DESCRIPTION:\nA tall vertical poster. The background is deep crimson fading to black at the edges. At the top-center, bold silver text reads: "RORO JONGGRANG". Below, in smaller italic text: "Starring: Luna Maya & Iqbaal Ramadhan". The center image shows a woman in elaborate Javanese court dress, surrounded by swirling stone dust and a half-built temple. At the bottom: "A Timeless Legend Returns — In Cinemas December 20, 2025." A small tagline in white italic: "Love. Betrayal. Eternity." An age rating logo "13+" appears at the bottom-right corner.`,
+    q:`What is the PRIMARY PURPOSE of this poster?`,
+    type:'functional',
+    opts:['A. To educate audiences about the historical accuracy of the Prambanan Temple origin.','B. To announce a traditional Javanese dance performance.','C. To promote an upcoming film based on the Roro Jonggrang legend.','D. To advertise a tourism package to Yogyakarta.','E. To invite students to a school drama competition.'],
+    answer:'C',
+    explain:`Movie posters primarily PROMOTE upcoming films. All elements — cast names, release date, cinemas — confirm this is a film promotion. The educational or tourism elements are secondary at best.`
+  },
+  {
+    id:22, section:'functional',
+    passage:null,
+    q:`Based on the poster description, what is the emotional tone suggested by the use of DEEP CRIMSON and BLACK colors?`,
+    type:'functional',
+    opts:['A. Playful and lighthearted, suitable for children.','B. Calm and peaceful, suggesting a nature documentary.','C. Romantic, dramatic, and potentially dark or tragic.','D. Energetic and festive, like a celebration.','E. Cold and scientific, like a technology film.'],
+    answer:'C',
+    explain:`Deep crimson (dark red) symbolises passion, love, danger, and tragedy. Black adds mystery and darkness. Together, they suggest a dramatic, possibly tragic romance — fitting the legend of betrayal and revenge. They do NOT suggest lighthearted, calm, or festive moods.`
+  },
+  {
+    id:23, section:'functional',
+    passage:null,
+    q:`The poster's tagline reads: "Love. Betrayal. Eternity." What is the EFFECT of using three short, fragmented phrases?`,
+    type:'functional',
+    opts:['A. It gives detailed plot information to prevent spoilers.','B. It creates a formal, academic tone.','C. It is used because the designer ran out of space.','D. It creates dramatic impact and emotional punch through brevity and rhythm.','E. It lists the three main characters of the film.'],
+    answer:'D',
+    explain:`Short, punchy taglines use fragmented syntax for dramatic effect. The rhythm — three words, three concepts — creates emotional resonance. This is a deliberate persuasive technique, not a space limitation or character list.`
+  },
+  {
+    id:24, section:'functional',
+    passage:`ADVERTISEMENT:\n\n🌟 SMARTLEARN ENGLISH APP 🌟\nBored of traditional English classes?\nLearn smarter, not harder!\n✅ Over 5,000 interactive exercises\n✅ AI-powered pronunciation feedback\n✅ Lessons from certified native teachers\nTry FREE for 7 days — No credit card needed!\n📲 Download Now on App Store & Google Play\n"The #1 English learning app trusted by 2 million students in Southeast Asia!"`,
+    q:`Which persuasive technique is used in the phrase "Bored of traditional English classes?"`,
+    type:'functional',
+    opts:['A. Passive voice to sound official and formal.','B. A rhetorical question that identifies the audience\'s problem to create relatability.','C. Alliteration to make the phrase more memorable.','D. A simile comparing traditional classes to something negative.','E. An imperative verb commanding the reader to stop attending classes.'],
+    answer:'B',
+    explain:`"Bored of traditional classes?" is a rhetorical question — it requires no answer but creates an emotional hook by identifying the audience\'s pain point. This makes the reader feel understood before offering the solution (SmartLearn). It is not passive voice, alliteration, simile, or an imperative.`
+  },
+  {
+    id:25, section:'functional',
+    passage:null,
+    q:`In the SmartLearn advertisement, what language feature is "Download Now"?`,
+    type:'functional',
+    opts:['A. Gerund used as subject of the sentence.','B. Superlative adjective emphasising the best option.','C. Imperative verb creating a direct call to action.','D. Past tense verb describing a completed action.','E. Passive voice construction.'],
+    answer:'C',
+    explain:`"Download" is an imperative verb — a command/instruction. Imperative sentences start with a verb and tell the audience what to DO. This is a "call to action" — one of the most important features of advertising language. It is not gerund (which would be "Downloading is easy"), not superlative, not passive, not past tense.`
+  },
+  {
+    id:26, section:'functional',
+    passage:`ANNOUNCEMENT:\n\nSMAN 5 SURABAYA\nANNOUNCEMENT\n\nTo: All Students, Grade X–XII\nFrom: Vice Principal for Student Affairs\nSubject: Temporary Closure of School Canteen\n\nPlease be informed that the school canteen will be temporarily closed from Monday, July 14 to Friday, July 18, 2025, due to renovation works.\n\nStudents are advised to bring packed lunches from home during this period. Students with special dietary needs are requested to contact the school nurse's office by July 11, 2025.\n\nWe apologize for any inconvenience caused.\n\nSurabaya, July 10, 2025\nDra. Hj. Siti Rahayu, M.Pd.\nVice Principal`,
+    q:`What is the announcement MAINLY about?`,
+    type:'functional',
+    opts:['A. The school is permanently closing its canteen.','B. Students must bring food from home every day for the entire school year.','C. The canteen will be temporarily closed for renovation for one week.','D. The school nurse is relocating to a new office.','E. A new canteen menu is being introduced next semester.'],
+    answer:'C',
+    explain:`The subject line and body clearly state: temporary closure, July 14–18, for renovation. "Permanent" (A) is incorrect. "Entire school year" (B) is an exaggeration. The nurse mention is secondary, not the main topic (D). No new menu is mentioned (E).`
+  },
+  {
+    id:27, section:'functional',
+    passage:null,
+    q:`Which language feature in the announcement makes it FORMAL and OFFICIAL?`,
+    type:'functional',
+    opts:['A. "Students are advised to bring packed lunches" — casual, friendly language.','B. "We apologize for any inconvenience" — emotional advertising language.','C. "The canteen WILL BE temporarily CLOSED" — passive voice construction.','D. "Bring packed lunches from home" — an imperative selling command.','E. "Due to renovation works" — a superlative adjective phrase.'],
+    answer:'C',
+    explain:`"Will be closed" is a passive voice construction (Subject + will be + V3). Passive voice is a hallmark of formal announcements — it sounds official and institutional. "Apologize" is a formal closing courtesy, not advertising. "Due to renovation" is a prepositional phrase, not a superlative.`
+  },
+  {
+    id:28, section:'functional',
+    passage:null,
+    q:`What is the MAIN DIFFERENCE between an ADVERTISEMENT and an ANNOUNCEMENT?`,
+    type:'functional',
+    opts:['A. Advertisements are always longer and more detailed than announcements.','B. Announcements use bright colours while advertisements use plain black and white.','C. Advertisements are written to persuade and sell; announcements are written to inform and notify.','D. Announcements can only be issued by the government, while ads come from companies.','E. Advertisements contain 5W1H information; announcements do not.'],
+    answer:'C',
+    explain:`The core distinction is PURPOSE: Advertisements → persuade/sell (using imperatives, superlatives, emotional language). Announcements → inform/notify (using formal language, passive voice, 5W1H). Length (A), colour (B), and source restrictions (D) are not accurate differentiators. Announcements typically DO contain 5W1H (E is wrong).`
+  },
+  {
+    id:29, section:'functional',
+    passage:null,
+    q:`A poster uses bold red text, a ticking clock image, and the phrase "LIMITED OFFER — TODAY ONLY!" What persuasive strategy does this PRIMARILY use?`,
+    type:'functional',
+    opts:['A. Testimonials from satisfied customers to build trust.','B. Celebrity endorsement to attract fans.','C. Creating urgency and scarcity to pressure immediate action.','D. Providing detailed statistical evidence to inform consumers.','E. Using passive voice to sound official and credible.'],
+    answer:'C',
+    explain:`"Limited offer, today only" + clock imagery = urgency/scarcity strategy. This psychological technique makes consumers fear missing out (FOMO), pressuring immediate purchase. It is not testimonials (A), celebrity endorsement (B), statistical data (D), or passive voice (E).`
+  },
+  {
+    id:30, section:'functional',
+    passage:null,
+    q:`Read: "The annual National Science Fair will be held on September 20, 2025, at GOR Pancasila. All Grade XI students are required to participate." What type of functional text is this, and why?`,
+    type:'functional',
+    opts:['A. An advertisement — because it promotes a science fair event to attract visitors.','B. An announcement — because it formally informs and directs a specific group about an event using formal, institutional language.','C. A movie poster — because it mentions a venue and a date.','D. A notice from a private company — because science fairs are commercial events.','E. A narrative text — because it tells a story about students at a science fair.'],
+    answer:'B',
+    explain:`Key indicators of an announcement: (1) Formal language, (2) Directs a specific audience (Grade XI students), (3) Provides 5W1H info (What: Science Fair; When: Sep 20; Where: GOR Pancasila; Who: Grade XI), (4) Uses passive-like formal structure ("are required"). It does not sell products (A) or tell a story (E).`
+  },
+
+  // ===== SECTION 4: GRAMMAR & READING (31-40) =====
+  {
+    id:31, section:'grammar',
+    passage:null,
+    q:`Identify the SIMPLE PAST TENSE verb in this sentence: "Yesterday, the students presented their science projects to the judges."`,
+    type:'grammar',
+    opts:['A. Yesterday','B. Students','C. Presented','D. Science','E. Judges'],
+    answer:'C',
+    explain:`"Presented" is the past tense form (V2) of "present." It is a regular verb: present → presented (add -ed). "Yesterday" is an adverb of time, not a verb. "Students" and "judges" are nouns. "Science" is an adjective modifying "projects."`
+  },
+  {
+    id:32, section:'grammar',
+    passage:null,
+    q:`Which sentence uses SIMPLE PRESENT TENSE correctly to express a general truth?`,
+    type:'grammar',
+    opts:['A. The earth was orbiting the sun.','B. The earth orbits the sun.','C. The earth will orbit the sun.','D. The earth orbited the sun.','E. The earth is orbiting the sun right now.'],
+    answer:'B',
+    explain:`General truths and scientific facts use Simple Present tense: Subject + V1 (base form/+s for 3rd person). "Orbits" is correct. "Was orbiting" (A) = past continuous; "Will orbit" (C) = future; "Orbited" (D) = past; "Is orbiting" (E) = present continuous (implies it just started or is temporary, not a permanent fact).`
+  },
+  {
+    id:33, section:'grammar',
+    passage:null,
+    q:`Which of the following is a PROPER NOUN?`,
+    type:'grammar',
+    opts:['A. city','B. mountain','C. teacher','D. Mount Bromo','E. ocean'],
+    answer:'D',
+    explain:`Proper nouns name specific, unique people, places, or things and are always capitalised. "Mount Bromo" is a specific, named mountain in East Java, Indonesia. "City," "mountain," "teacher," and "ocean" are common nouns — generic categories, not specific names.`
+  },
+  {
+    id:34, section:'grammar',
+    passage:null,
+    q:`Choose the sentence with the CORRECT use of an IRREGULAR PAST TENSE verb.`,
+    type:'grammar',
+    opts:['A. She buyed a new bicycle last Saturday.','B. He goed to the market early this morning.','C. The children runned across the schoolyard.','D. They found an old map inside the chest.','E. We taked the wrong bus to school.'],
+    answer:'D',
+    explain:`"Found" is the correct irregular past tense of "find" (find → found). Options A ("buyed" → should be "bought"), B ("goed" → should be "went"), C ("runned" → should be "ran"), and E ("taked" → should be "took") all use incorrect forms.`
+  },
+  {
+    id:35, section:'grammar',
+    passage:null,
+    q:`Which word in this sentence is an ADJECTIVE? "The diligent students received excellent grades in the final examination."`,
+    type:'grammar',
+    opts:['A. Students','B. Received','C. Diligent','D. Examination','E. Grades'],
+    answer:'C',
+    explain:`"Diligent" is an adjective — it describes the noun "students." "Students," "grades," and "examination" are nouns. "Received" is a verb. Adjectives modify nouns and answer questions like "what kind?" or "which?"  "Excellent" is also an adjective (modifying "grades"), but it is not among the options as correct.`
+  },
+  {
+    id:36, section:'grammar',
+    passage:`Read this short text:\n"Every morning, Andi wakes up at 5 AM. He prays, exercises for thirty minutes, and then eats breakfast with his family. After school, he helps his mother in the small family shop. Andi believes that discipline is the key to success."`,
+    q:`What tense is predominantly used in the text, and why?`,
+    type:'grammar',
+    opts:['A. Simple Future — because it describes Andi\'s plans for tomorrow.','B. Simple Past — because Andi\'s routine happened last week.','C. Present Continuous — because Andi is currently doing all these things right now.','D. Simple Present — because it describes Andi\'s habitual daily routine.','E. Past Perfect — because it shows a sequence of completed past events.'],
+    answer:'D',
+    explain:`Simple Present tense is used for habits, routines, and repeated actions. Words like "every morning" and the verbs "wakes," "prays," "exercises," "eats," "helps" all confirm this is a habitual routine description — a key use of Simple Present tense.`
+  },
+  {
+    id:37, section:'grammar',
+    passage:null,
+    q:`Which sentence uses SIMPLE FUTURE (will + V1) CORRECTLY?`,
+    type:'grammar',
+    opts:['A. She will went to the library after school.','B. They will studying English together this evening.','C. He will be calling you at noon.','D. The principal will announce the results tomorrow.','E. We will have finished the project by Friday.'],
+    answer:'D',
+    explain:`Simple Future: Subject + WILL + BASE VERB (V1). "Will announce" is correct. Option A ("will went") uses past tense after will. Option B ("will studying") adds -ing incorrectly. Option C ("will be calling") is Future Continuous. Option E ("will have finished") is Future Perfect.`
+  },
+  {
+    id:38, section:'grammar',
+    passage:null,
+    q:`Identify the sentence with a GRAMMATICAL ERROR related to subject-verb agreement.`,
+    type:'grammar',
+    opts:['A. The students in this class work very hard every day.','B. My sister always arrives on time for her appointments.','C. The group of teachers are planning a field trip. (ERROR)','D. He reads at least two books per month.','E. All of the answers were reviewed by the teacher.'],
+    answer:'C',
+    explain:`"The group of teachers" — the head noun is "group" (singular collective noun), so the verb should be "IS planning," not "ARE planning." In formal academic English, collective nouns (group, team, committee, class) take singular verbs. This is a classic subject-verb agreement error.`
+  },
+  {
+    id:39, section:'grammar',
+    passage:`Text excerpt:\n"The annual Batik Festival is held every October in Solo, Central Java. Hundreds of artisans from across the archipelago showcase their finest hand-drawn batik. This year, a special exhibition featuring batik designs from 34 Indonesian provinces will be the highlight of the event."`,
+    q:`According to the passage, what will be the HIGHLIGHT of this year's Batik Festival?`,
+    type:'grammar',
+    opts:['A. A traditional dance performance from Central Java.','B. A cooking competition featuring Javanese cuisine.','C. A special exhibition of batik from all 34 Indonesian provinces.','D. The awarding of prizes to the top ten artisans.','E. A keynote speech by the Governor of Central Java.'],
+    answer:'C',
+    explain:`The text explicitly states: "a special exhibition featuring batik designs from 34 Indonesian provinces will be the HIGHLIGHT of the event." This is a specific information question — scanning for the keyword "highlight" leads directly to the answer.`
+  },
+  {
+    id:40, section:'grammar',
+    passage:null,
+    q:`Read: "Despite being one of the smallest countries in Europe, Luxembourg has one of the highest GDP per capita in the world." What reading skill is MOST needed to answer the question: "What is true about Luxembourg's economy?"`,
+    type:'grammar',
+    opts:['A. Skimming — reading quickly for the general topic of the passage.','B. Scanning — looking for a specific keyword ("economy" or "GDP") to locate the answer directly.','C. Inferring — drawing a conclusion not directly stated in the text.','D. Summarising — rewriting the passage in your own words.','E. Predicting — guessing what the text will be about before reading.'],
+    answer:'B',
+    explain:`To answer a specific factual question ("What is true about Luxembourg\'s economy?"), you SCAN for keywords — in this case "GDP" or "economy." Skimming is for overall main ideas. Inferring is for unstated conclusions. Summarising and predicting are separate skills not used for specific fact retrieval.`
+  }
+];
+
+// State
+let currentQ = 0;
+let answers = {};
+let filteredQs = [...QUESTIONS];
+let quizStarted = false;
+let sectionFilter = 'all';
+
+// Stars
+function createStars() {
+  const container = document.getElementById('stars');
+  const nebulas = [
+    {x:20,y:15,w:400,h:400,c:'#6366f1'},
+    {x:70,y:60,w:500,h:500,c:'#e8c96a'},
+    {x:50,y:80,w:350,h:350,c:'#3ecfb2'},
+  ];
+  nebulas.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'nebula';
+    el.style.cssText = `left:${n.x}%;top:${n.y}%;width:${n.w}px;height:${n.h}px;background:${n.c};animation-delay:${Math.random()*5}s;animation-duration:${15+Math.random()*10}s`;
+    container.appendChild(el);
+  });
+  for(let i=0;i<120;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random()*2.5+0.5;
+    const minOp = (Math.random()*0.3+0.05).toFixed(2);
+    const maxOp = (Math.random()*0.6+0.3).toFixed(2);
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${-Math.random()*4}s;--min-op:${minOp};--max-op:${maxOp}`;
+    container.appendChild(s);
+  }
+}
+
+function startQuiz() {
+  document.getElementById('hero').style.display='none';
+  document.getElementById('quiz-app').style.display='block';
+  document.getElementById('answer-key').style.display='block';
+  quizStarted = true;
+  filteredQs = [...QUESTIONS];
+  currentQ = 0;
+  answers = {};
+  renderQuestion();
+  updateProgress();
+  buildAnswerTable();
+  setupReveal();
+}
+
+function filterSection(sec, btn) {
+  document.querySelectorAll('.sec-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  sectionFilter = sec;
+  if(sec === 'all') filteredQs = [...QUESTIONS];
+  else filteredQs = QUESTIONS.filter(q=>q.section===sec);
+  currentQ = 0;
+  renderQuestion();
+  updateProgress();
+}
+
+function renderQuestion() {
+  const container = document.getElementById('quiz-container');
+  if(currentQ >= filteredQs.length) { showScore(); return; }
+  const q = filteredQs[currentQ];
+  const answered = answers[q.id];
+
+  const sectionLabels = {narrative:'Narrative Text', conditional:'Conditional', functional:'Functional Text', grammar:'Grammar & Reading'};
+  const sectionClass = {narrative:'tag-narrative', conditional:'tag-conditional', functional:'tag-functional', grammar:'tag-grammar'};
+
+  let passageHtml = '';
+  if(q.passage) {
+    const lines = q.passage.split('\n');
+    const title = lines[0];
+    const body = lines.slice(1).join('\n').trim();
+    passageHtml = `<div class="passage-card"><span class="passage-label">📄 Reading Passage</span><div class="passage-text"><strong style="color:var(--gold);font-size:13px;">${title}</strong><br><br>${body.replace(/\n/g,'<br>')}</div></div>`;
+  }
+
+  const optsHtml = q.opts.map((opt,i)=>{
+    const letter = ['A','B','C','D','E'][i];
+    let cls = '';
+    if(answered) {
+      if(letter===q.answer) cls='correct';
+      else if(letter===answered) cls='wrong';
+    }
+    return `<button class="option-btn ${cls}" ${answered?'disabled':''} onclick="selectAnswer(${q.id},'${letter}',this)" data-letter="${letter}">
+      <span class="option-letter">${letter}</span>
+      <span class="option-text">${opt.slice(3)}</span>
+    </button>`;
+  }).join('');
+
+  const explainHtml = `<div class="explanation-box ${answered?'visible':''}" id="explain-${q.id}">
+    <div class="explanation-label">💡 Explanation</div>
+    <div class="explanation-text">${q.explain}</div>
+  </div>`;
+
+  const isFirst = currentQ===0;
+  const isLast = currentQ===filteredQs.length-1;
+
+  container.innerHTML = `
+    ${passageHtml}
+    <div class="question-card">
+      <div class="q-meta">
+        <div class="q-num">${q.id < 10 ? '0'+q.id : q.id}</div>
+        <span class="q-section-tag ${sectionClass[q.section]}">${sectionLabels[q.section]}</span>
+      </div>
+      <p class="q-text">${q.q}</p>
+      <div class="options-list">${optsHtml}</div>
+      ${explainHtml}
+      <div class="q-nav">
+        <button class="nav-btn" onclick="prevQ()" ${isFirst?'disabled':''}>← Previous</button>
+        <span class="q-counter">${currentQ+1} / ${filteredQs.length}</span>
+        ${isLast && sectionFilter==='all'
+          ? `<button class="nav-btn primary" onclick="showScore()">Submit & See Score →</button>`
+          : `<button class="nav-btn primary" onclick="nextQ()">Next →</button>`
+        }
+      </div>
+    </div>`;
+}
+
+function selectAnswer(qId, letter, btn) {
+  if(answers[qId]) return;
+  answers[qId] = letter;
+  const q = QUESTIONS.find(x=>x.id===qId);
+
+  // Style buttons
+  const allBtns = btn.closest('.options-list').querySelectorAll('.option-btn');
+  allBtns.forEach(b=>{
+    b.disabled=true;
+    const l = b.dataset.letter;
+    if(l===q.answer) b.classList.add('correct');
+    else if(l===letter) b.classList.add('wrong');
+  });
+
+  // Show explanation
+  const expBox = document.getElementById(`explain-${qId}`);
+  if(expBox) expBox.classList.add('visible');
+
+  updateProgress();
+  showToast(letter===q.answer ? '✅ Correct!' : `❌ Wrong — Answer is ${q.answer}`);
+}
+
+function nextQ() {
+  if(currentQ < filteredQs.length-1) { currentQ++; renderQuestion(); window.scrollTo({top:document.getElementById('quiz-app').offsetTop-20,behavior:'smooth'}); }
+}
+function prevQ() {
+  if(currentQ > 0) { currentQ--; renderQuestion(); window.scrollTo({top:document.getElementById('quiz-app').offsetTop-20,behavior:'smooth'}); }
+}
+
+function updateProgress() {
+  const total = sectionFilter==='all' ? 40 : filteredQs.length;
+  const answered = sectionFilter==='all'
+    ? Object.keys(answers).length
+    : filteredQs.filter(q=>answers[q.id]).length;
+  const pct = total>0 ? (answered/total*100).toFixed(0) : 0;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-count').textContent = `${answered} / ${total}`;
+}
+
+function showScore() {
+  if(sectionFilter!=='all') { showToast('Finish all 40 questions first!'); return; }
+  document.getElementById('quiz-app').style.display='none';
+  const scoreScreen = document.getElementById('score-screen');
+  scoreScreen.classList.add('active');
+
+  const correct = QUESTIONS.filter(q=>answers[q.id]===q.answer).length;
+  const total = 40;
+  const pct = Math.round(correct/total*100);
+
+  document.getElementById('score-num').textContent = correct;
+  const circle = document.getElementById('score-circle');
+  circle.style.setProperty('--pct', `${pct}% 0`);
+  circle.style.background = `conic-gradient(var(--gold) ${pct*3.6}deg, var(--surface2) 0)`;
+
+  const titles = [
+    [90,'🏆 Outstanding!','Excellent performance! You are ready for the Olympiad.'],
+    [75,'🥇 Great Work!','Strong performance! Review a few areas and you\'re set.'],
+    [60,'📚 Good Effort!','Solid foundation. More practice on weak sections will help.'],
+    [40,'💪 Keep Going!','You\'re on the right track. Review the explanations carefully.'],
+    [0,'🌱 Keep Practising!','Every attempt builds knowledge. Study the explanations and try again!']
+  ];
+  const [,title,msg] = titles.find(([min])=>pct>=min);
+  document.getElementById('score-title').textContent = title;
+  document.getElementById('score-msg').textContent = msg;
+
+  const sections = ['narrative','conditional','functional','grammar'];
+  const sLabels = ['Narrative','Conditional','Functional','Grammar'];
+  const gridHtml = sections.map((s,i)=>{
+    const sQs = QUESTIONS.filter(q=>q.section===s);
+    const sCorrect = sQs.filter(q=>answers[q.id]===q.answer).length;
+    const color = sCorrect/sQs.length >= 0.7 ? 'var(--green)' : sCorrect/sQs.length>=0.4 ? 'var(--gold)' : 'var(--coral)';
+    return `<div class="score-stat-card"><span class="score-stat-val" style="color:${color}">${sCorrect}/${sQs.length}</span><span class="score-stat-key">${sLabels[i]}</span></div>`;
+  }).join('');
+  document.getElementById('score-grid').innerHTML = gridHtml;
+
+  if(pct >= 75) launchConfetti();
+}
+
+function resetQuiz() {
+  document.getElementById('score-screen').classList.remove('active');
+  answers = {};
+  currentQ = 0;
+  sectionFilter = 'all';
+  filteredQs = [...QUESTIONS];
+  document.querySelectorAll('.sec-filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('quiz-app').style.display='block';
+  renderQuestion();
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildAnswerTable() {
+  const tbody = document.getElementById('answer-tbody');
+  const sections = {narrative:'📖 Narrative Text',conditional:'🔀 Conditional Sentences',functional:'📢 Functional Texts',grammar:'✏️ Grammar & Reading'};
+  let lastSection = '';
+  tbody.innerHTML = QUESTIONS.map(q => {
+    let sectionRow = '';
+    if(q.section !== lastSection) {
+      lastSection = q.section;
+      sectionRow = `<tr><td colspan="3" style="background:var(--surface2);padding:10px 16px;"><span class="section-row" style="color:var(--gold)">${sections[q.section]}</span></td></tr>`;
+    }
+    return sectionRow + `<tr><td style="font-family:'DM Mono',monospace;color:var(--text3);font-size:12px;">${q.id < 10 ? '0'+q.id : q.id}</td><td><span class="key-badge">${q.answer}</span></td><td>${q.explain}</td></tr>`;
+  }).join('');
+}
+
+function launchConfetti() {
+  const colors = ['#e8c96a','#3ecfb2','#ff6b6b','#a78bfa','#60a5fa'];
+  for(let i=0;i<60;i++){
+    setTimeout(()=>{
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};--dur:${1.5+Math.random()*2}s;--rot:${Math.random()*720-360}deg;width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;border-radius:${Math.random()>0.5?'50%':'2px'}`;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),4000);
+    },i*50);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function setupReveal() {
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+}
+
+createStars();
+setupReveal();
+</script>
+</body>
+</html>
